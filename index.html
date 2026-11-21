@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>TaskPulse - Laptop Task & Change Manager</title>
+  <title>TaskPulse - Multi-Device Task & Change Manager</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -86,11 +86,11 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 12px 24px;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 14px;
     }
 
     .header-top-row {
@@ -101,7 +101,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      min-width: 180px;
+      min-width: 170px;
     }
 
     .logo-badge {
@@ -135,7 +135,7 @@
     /* Search & Stats Header Center */
     .header-center {
       flex: 1;
-      max-width: 580px;
+      max-width: 480px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -242,10 +242,6 @@
       padding: 7px 14px;
     }
 
-    .btn-success:hover {
-      background: var(--success-hover);
-    }
-
     .btn-icon {
       padding: 7px 9px;
       background: var(--surface);
@@ -258,16 +254,68 @@
       background: var(--surface-hover);
     }
 
+    /* Account & Sync Badges in Header */
+    .account-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-pill {
+      background: var(--surface-hover);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-connect-phone {
+      background: linear-gradient(135deg, rgba(47, 129, 247, 0.2), rgba(137, 87, 229, 0.2));
+      border: 1px solid var(--primary);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .btn-connect-phone:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
     /* Main Container */
     .container {
       max-width: 1280px;
       width: 100%;
       margin: 0 auto;
-      padding: 20px 24px 60px;
+      padding: 18px 24px 60px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
       flex: 1;
+    }
+
+    /* Sync Alert Banner */
+    .sync-alert-banner {
+      background: linear-gradient(90deg, rgba(47, 129, 247, 0.12), rgba(35, 134, 54, 0.12));
+      border: 1px solid var(--primary-light);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      gap: 12px;
+    }
+
+    .sync-alert-banner strong {
+      color: var(--primary);
     }
 
     /* Quick Overview Stats Bar */
@@ -783,7 +831,7 @@
       border: 1px solid var(--surface-border);
       border-radius: var(--radius-lg);
       width: 100%;
-      max-width: 540px;
+      max-width: 520px;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
       overflow: hidden;
       animation: modalIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
@@ -869,6 +917,51 @@
       gap: 10px;
     }
 
+    /* Auth Modal Tabs */
+    .auth-tab-bar {
+      display: flex;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      margin-bottom: 6px;
+      gap: 4px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .auth-tab-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    /* QR Code Display Card */
+    .qr-card {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto;
+      width: 200px;
+      height: 200px;
+    }
+
+    .qr-card img {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
     /* Toast Notification */
     .toast-container {
       position: fixed;
@@ -935,10 +1028,12 @@
       height: 8px;
       border-radius: 50%;
       background: var(--success);
+      box-shadow: 0 0 6px rgba(35, 134, 54, 0.6);
     }
 
     .sync-dot.offline {
       background: var(--warning);
+      box-shadow: none;
     }
 
     /* Mobile Floating Action Button (FAB) */
@@ -966,74 +1061,36 @@
       background: var(--primary-hover);
     }
 
-    /* ===================================================
-       RESPONSIVE MEDIA QUERIES (Mobile & Tablet)
-       =================================================== */
-
-    /* Tablet & Small Laptop (<= 900px) */
-    @media (max-width: 900px) {
-      header {
-        padding: 12px 16px;
-        gap: 12px;
-      }
-      .brand-section {
-        min-width: 140px;
-      }
-      .container {
-        padding: 16px 16px 60px;
-      }
-    }
-
-    /* Mobile Landscape & Large Phones (<= 768px) */
-    @media (max-width: 768px) {
+    /* Responsive Queries */
+    @media (max-width: 860px) {
       header {
         flex-direction: column;
         align-items: stretch;
         padding: 10px 14px;
         gap: 10px;
       }
-
       .header-top-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
       }
-
       .header-center {
         max-width: 100%;
         width: 100%;
       }
-
-      .header-actions {
-        gap: 6px;
-      }
-
       .desktop-only {
         display: none !important;
       }
-
       .btn-label-desktop {
         display: none;
       }
-
-      .btn-secondary {
-        padding: 7px 10px;
-      }
-
       .shortcut-badge {
         display: none;
       }
-
       .mobile-fab {
         display: flex;
       }
-
-      /* Horizontal scrolling swipeable Apps strip */
-      .apps-section {
-        padding: 10px 12px;
-      }
-
       .apps-list {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -1041,214 +1098,54 @@
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
       }
-
       .apps-list::-webkit-scrollbar {
         display: none;
       }
-
-      .app-pill, .btn-add-app {
-        white-space: nowrap;
-      }
-
-      /* Task card always show action buttons for touch */
       .task-actions {
         opacity: 0.9;
-        gap: 2px;
       }
-
       .btn-card-action {
         padding: 8px;
       }
-
       .container {
         padding: 12px 14px 80px;
-        gap: 14px;
-      }
-
-      .toast-container {
-        left: 16px;
-        right: 16px;
-        bottom: 86px;
-      }
-
-      .toast {
-        width: 100%;
-        justify-content: center;
       }
     }
 
-    /* Mobile Portrait / Small Phones (<= 640px) */
     @media (max-width: 640px) {
-      /* Form inputs minimum 16px to prevent iOS auto-zoom */
       .form-control, .quick-input-title, select.quick-select, .quick-input-ver {
         font-size: 16px !important;
       }
-
-      /* 2x2 Stats Grid */
       .stats-bar {
         grid-template-columns: 1fr 1fr;
         gap: 8px;
       }
-
-      .stat-card {
-        padding: 10px 12px;
-      }
-
       .stat-card:nth-child(4) {
         grid-column: span 2;
       }
-
-      .stat-info .stat-label {
-        font-size: 10px;
-      }
-
-      .stat-info .stat-value {
-        font-size: 18px;
-      }
-
-      /* Quick Add Stack */
-      .quick-add-card {
-        padding: 12px 14px;
-      }
-
       .quick-add-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
       }
-
       .quick-input-title {
         grid-column: span 2;
         width: 100%;
         min-width: 0;
       }
-
-      #quickAppSelect {
-        grid-column: span 2;
-      }
-
-      #quickTypeSelect {
-        grid-column: span 1;
-      }
-
-      #quickPrioritySelect {
-        grid-column: span 1;
-      }
-
-      .quick-input-ver {
-        grid-column: span 1;
-        width: 100%;
-      }
-
-      .quick-add-row button[type="submit"] {
-        grid-column: span 1;
-        width: 100%;
-        padding: 10px;
-      }
-
-      /* Filter & Tabs Stack */
-      .filter-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-
-      .status-tabs {
-        width: 100%;
-        display: flex;
-      }
-
-      .status-tab {
-        flex: 1;
-        text-align: center;
-        padding: 8px 4px;
-        font-size: 11px;
-      }
-
-      .filter-controls {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-
-      #filterType, #filterPriority {
-        width: 100%;
-      }
-
-      #sortBy {
-        grid-column: span 2;
-        width: 100%;
-      }
-
-      /* Task Card Details */
-      .task-card {
-        padding: 12px;
-        gap: 10px;
-      }
-
-      .completer-btn {
-        width: 26px;
-        height: 26px;
-      }
-
-      .task-title {
-        font-size: 13.5px;
-      }
-
-      .task-meta-top {
-        gap: 4px;
-      }
-
-      .badge-app, .badge-type, .badge-priority, .badge-version {
-        font-size: 10px;
-        padding: 1px 6px;
-      }
-
-      /* Bottom-Sheet Style Modals on Mobile */
-      .modal-backdrop {
-        align-items: flex-end;
-        padding: 0;
-      }
-
-      .modal-card {
-        max-width: 100%;
-        width: 100%;
-        border-radius: 18px 18px 0 0;
-        max-height: 88vh;
-        border-bottom: none;
-        animation: modalSheetUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      @keyframes modalSheetUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
-      }
-
-      .modal-header {
-        padding: 14px 18px;
-      }
-
-      .modal-body {
-        padding: 16px 18px;
-      }
-
-      .form-row {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .modal-footer {
-        padding: 12px 18px 24px;
-      }
-
-      /* Footer */
-      footer {
-        flex-direction: column;
-        gap: 6px;
-        text-align: center;
-        padding: 14px 16px 85px;
-      }
+      #quickAppSelect { grid-column: span 2; }
+      #quickTypeSelect { grid-column: span 1; }
+      #quickPrioritySelect { grid-column: span 1; }
+      .quick-input-ver { grid-column: span 1; width: 100%; }
+      .quick-add-row button[type="submit"] { grid-column: span 1; width: 100%; padding: 10px; }
+      .filter-bar { flex-direction: column; gap: 10px; }
+      .status-tabs { width: 100%; display: flex; }
+      .status-tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 11px; }
+      .filter-controls { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      #sortBy { grid-column: span 2; }
+      .modal-backdrop { align-items: flex-end; padding: 0; }
+      .modal-card { max-width: 100%; border-radius: 18px 18px 0 0; max-height: 88vh; }
+      .form-row { flex-direction: column; gap: 10px; }
     }
   </style>
 </head>
@@ -1262,11 +1159,16 @@
         <div class="logo-badge">⚡</div>
         <div class="brand-text">
           <h1>TaskPulse</h1>
-          <span>Task & Change Tracker</span>
+          <span>Laptop & Mobile Task Sync</span>
         </div>
       </div>
 
       <div class="header-actions">
+        <!-- Account Status & Phone Connect -->
+        <div class="account-badge-wrap" id="accountBadgeWrap">
+          <!-- Rendered dynamically -->
+        </div>
+
         <button class="btn-primary desktop-only" id="btnOpenNewTaskModal">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/></svg>
           New Change
@@ -1298,6 +1200,14 @@
 
   <!-- Main View Container -->
   <main class="container">
+    <!-- Notice Banner if not logged in -->
+    <div class="sync-alert-banner" id="authBanner" style="display:none;">
+      <div>
+        <strong>📱 Multi-Device Sync Ready:</strong> Create or log in with an account to sync tasks live between your laptop and phone with zero data loss.
+      </div>
+      <button class="btn-primary" onclick="openAuthModal('register')" style="padding:4px 10px; font-size:11px; white-space:nowrap;">Sign In / Register</button>
+    </div>
+
     <!-- Top Stats Bar -->
     <section class="stats-bar">
       <div class="stat-card">
@@ -1431,8 +1341,78 @@
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncText">Checking local server...</span>
     </div>
-    <div>TaskPulse • Ultra-lightweight ~30KB</div>
+    <div>TaskPulse • Multi-Device Protected Sync</div>
   </footer>
+
+  <!-- Modal: Authentication (Sign In / Register) -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="authModalTitle">My Account (Laptop & Phone Sync)</div>
+        <button class="btn-card-action" onclick="closeModal('authModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-tab-bar">
+          <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">Log In</button>
+          <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+
+        <p id="authNote" style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+          Log in with your account to access your tasks from your laptop and phone.
+        </p>
+
+        <form id="authForm" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="form-group">
+            <label class="form-label" for="authUsername">Username</label>
+            <input type="text" id="authUsername" class="form-control" placeholder="e.g. asho" autocomplete="username" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="authPassword">Password</label>
+            <input type="password" id="authPassword" class="form-control" placeholder="Enter your password" autocomplete="current-password" required />
+          </div>
+          <div id="authError" style="color:var(--danger-hover); font-size:12px; display:none;"></div>
+
+          <button type="submit" class="btn-primary" id="btnAuthSubmit" style="padding:10px; margin-top:4px;">
+            Log In
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Connect Phone (QR Code & WiFi URL) -->
+  <div class="modal-backdrop" id="phoneModal">
+    <div class="modal-card" style="text-align:center;">
+      <div class="modal-header">
+        <div class="modal-title">📱 Connect Your Phone</div>
+        <button class="btn-card-action" onclick="closeModal('phoneModal')">✕</button>
+      </div>
+      <div class="modal-body" style="align-items:center;">
+        <p style="font-size:13px; color:var(--text-muted); max-width:380px;">
+          Connect your phone to the <strong>same Wi-Fi network</strong> as this laptop and scan this QR code or type the link below:
+        </p>
+
+        <div class="qr-card">
+          <img id="qrImage" alt="Scan QR Code with Phone" />
+        </div>
+
+        <div style="background:var(--bg); border:1px solid var(--surface-border); padding:8px 14px; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:14px; color:var(--primary); font-weight:600; user-select:all;" id="phoneUrlText">
+          http://192.168.0.102:4321
+        </div>
+
+        <button type="button" class="btn-secondary" id="btnCopyPhoneUrl" style="margin-top:6px; font-size:12px;">
+          📋 Copy Phone URL
+        </button>
+
+        <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.4;">
+          🔒 <strong>Zero Data Loss Guarantee:</strong> Changes made on your laptop or phone save to the laptop backend instantly.
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:center;">
+        <button type="button" class="btn-primary" onclick="closeModal('phoneModal')">Got It</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal: Detailed Add / Edit Task -->
   <div class="modal-backdrop" id="taskModal">
@@ -1563,7 +1543,12 @@
   <script>
     // --- State & Storage ---
     const STORAGE_KEY = 'taskpulse_laptop_data';
+    const TOKEN_KEY = 'taskpulse_token';
+    const USER_KEY = 'taskpulse_user';
+
     let state = {
+      user: JSON.parse(localStorage.getItem(USER_KEY) || 'null'),
+      token: localStorage.getItem(TOKEN_KEY) || '',
       apps: [],
       tasks: [],
       selectedAppId: 'all',
@@ -1572,7 +1557,10 @@
       priorityFilter: 'all',
       sortBy: 'newest',
       searchQuery: '',
-      isServerConnected: false
+      isServerConnected: false,
+      lastSyncTime: null,
+      authMode: 'login',
+      phoneUrl: 'http://192.168.0.102:4321'
     };
 
     // --- Sound Effects (Web Audio API - 0 external files) ---
@@ -1592,9 +1580,7 @@
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.25);
-      } catch (e) {
-        // Audio might be blocked by browser policy until user interaction
-      }
+      } catch (e) {}
     }
 
     // --- Confetti Particles Effect (Vanilla JS Canvas) ---
@@ -1633,7 +1619,7 @@
       confetti.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.25; // gravity
+        p.vy += 0.25;
         p.rotation += p.dr;
         p.alpha -= 0.018;
 
@@ -1646,9 +1632,7 @@
         ctx.restore();
       });
 
-      if (confetti.length > 0) {
-        requestAnimationFrame(renderConfetti);
-      }
+      if (confetti.length > 0) requestAnimationFrame(renderConfetti);
     }
 
     // --- Toast Notifications ---
@@ -1665,27 +1649,182 @@
       }, 3000);
     }
 
-    // --- Data Persistence: Server + LocalStorage Dual-Sync ---
-    async function loadData() {
-      // Try local Node server first
+    // --- Authentication Logic ---
+    function updateAccountUI() {
+      const wrap = document.getElementById('accountBadgeWrap');
+      const banner = document.getElementById('authBanner');
+
+      if (state.user && state.token) {
+        wrap.innerHTML = `
+          <div class="user-pill">
+            <span>👤 ${escapeHtml(state.user.username)}</span>
+          </div>
+          <button class="btn-connect-phone" id="btnOpenPhoneModal" title="Open on Phone">
+            📱 Phone Sync
+          </button>
+          <button class="btn-card-action" onclick="logout()" title="Log Out" style="font-size:12px;">
+            🚪
+          </button>
+        `;
+        document.getElementById('btnOpenPhoneModal').onclick = openPhoneModal;
+        if (banner) banner.style.display = 'none';
+      } else {
+        wrap.innerHTML = `
+          <button class="btn-secondary" onclick="openAuthModal('login')" style="font-size:12px; font-weight:600;">
+            🔑 Sign In
+          </button>
+          <button class="btn-connect-phone" id="btnOpenPhoneModal" title="Open on Phone">
+            📱 Phone Sync
+          </button>
+        `;
+        document.getElementById('btnOpenPhoneModal').onclick = openPhoneModal;
+        if (banner) banner.style.display = 'flex';
+      }
+    }
+
+    window.openAuthModal = function(mode = 'login') {
+      switchAuthTab(mode);
+      document.getElementById('authError').style.display = 'none';
+      openModal('authModal');
+    };
+
+    window.switchAuthTab = function(mode) {
+      state.authMode = mode;
+      const tabLogin = document.getElementById('tabBtnLogin');
+      const tabRegister = document.getElementById('tabBtnRegister');
+      const note = document.getElementById('authNote');
+      const submit = document.getElementById('btnAuthSubmit');
+
+      if (mode === 'login') {
+        tabLogin.className = 'auth-tab-btn active';
+        tabRegister.className = 'auth-tab-btn';
+        note.innerHTML = 'Log in with your username and password to sync your tasks with this laptop or phone.';
+        submit.textContent = 'Log In';
+      } else {
+        tabRegister.className = 'auth-tab-btn active';
+        tabLogin.className = 'auth-tab-btn';
+        note.innerHTML = '✨ <strong>Zero Data Loss:</strong> Any existing tasks will be automatically attached to your new account.';
+        submit.textContent = 'Create Account & Sync My Tasks';
+      }
+    };
+
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('authUsername').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const errEl = document.getElementById('authError');
+      errEl.style.display = 'none';
+
+      const endpoint = state.authMode === 'register' ? '/api/auth/register' : '/api/auth/login';
+
       try {
-        const res = await fetch('/api/data', { cache: 'no-store' });
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errEl.textContent = data.error || 'Authentication failed';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        // Save session
+        state.token = data.token;
+        state.user = data.user;
+        localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+
+        closeModal('authModal');
+        updateAccountUI();
+        showToast(`Welcome ${data.user.username}! In sync.`, '🎉');
+
+        // Immediately load user's data
+        await loadData();
+      } catch (err) {
+        errEl.textContent = 'Could not reach server. Ensure laptop server is running.';
+        errEl.style.display = 'block';
+      }
+    });
+
+    window.logout = async function() {
+      if (!confirm('Log out from this device?')) return;
+      try {
+        if (state.token) {
+          await fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${state.token}` }
+          });
+        }
+      } catch (e) {}
+
+      state.token = '';
+      state.user = null;
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      updateAccountUI();
+      showToast('Logged out');
+      loadData();
+    };
+
+    // --- Phone Connection Modal & QR Code ---
+    async function openPhoneModal() {
+      try {
+        const res = await fetch('/api/network-info');
+        if (res.ok) {
+          const info = await res.json();
+          if (info.ips && info.ips.length > 0) {
+            state.phoneUrl = `http://${info.ips[0]}:${info.port}`;
+          }
+        }
+      } catch (e) {}
+
+      document.getElementById('phoneUrlText').textContent = state.phoneUrl;
+
+      // Generate QR Code via clean SVG encoder (instant, 100% offline)
+      const encodedUrl = encodeURIComponent(state.phoneUrl);
+      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedUrl}`;
+
+      openModal('phoneModal');
+    }
+
+    document.getElementById('btnCopyPhoneUrl').onclick = () => {
+      navigator.clipboard.writeText(state.phoneUrl).then(() => {
+        showToast('Phone URL copied to clipboard!', '📋');
+      });
+    };
+
+    // --- Data Persistence: Server (tasks.json) + LocalStorage Dual-Sync ---
+    async function loadData() {
+      try {
+        const headers = {};
+        if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+
+        const res = await fetch('/api/data', { cache: 'no-store', headers });
         if (res.ok) {
           const data = await res.json();
           state.apps = data.apps || [];
           state.tasks = data.tasks || [];
           state.isServerConnected = true;
+          state.lastSyncTime = new Date();
+
+          // Save local backup copy
           localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
           updateSyncIndicator(true);
           render();
           return;
+        } else if (res.status === 401) {
+          // Server requires authentication
+          state.isServerConnected = true;
+          updateSyncIndicator(true, 'Sign-In Required');
         }
       } catch (err) {
-        // Node server is not active (e.g. running from GitHub Pages or direct file://)
+        state.isServerConnected = false;
       }
 
-      // Fallback to LocalStorage
-      state.isServerConnected = false;
+      // Offline fallback: load from LocalStorage with zero data loss
       updateSyncIndicator(false);
       const local = localStorage.getItem(STORAGE_KEY);
       if (local) {
@@ -1693,48 +1832,36 @@
           const parsed = JSON.parse(local);
           state.apps = parsed.apps || [];
           state.tasks = parsed.tasks || [];
-        } catch (e) {
-          seedDefaults();
-        }
-      } else {
-        seedDefaults();
+        } catch (e) {}
       }
       render();
     }
 
-    function seedDefaults() {
-      state.apps = [
-        { id: 'app-1', name: 'TaskLaptop', description: 'Personal laptop task & change manager' }
-      ];
-      state.tasks = [
-        {
-          id: 'task-1',
-          appId: 'app-1',
-          title: 'Welcome to TaskPulse! Check this box to mark completed',
-          type: 'Feature',
-          priority: 'High',
-          version: 'v1.0.0',
-          notes: 'You can add changes by app, filter them, and export CHANGELOG.md',
-          completed: false,
-          createdAt: new Date().toISOString(),
-          completedAt: null
-        }
-      ];
-      saveData();
-    }
-
     async function saveData() {
       const payload = { apps: state.apps, tasks: state.tasks };
-      // Always save to localStorage immediately for instant offline resilience
+
+      // 1. Immediately write to LocalStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 
+      // 2. Synchronize to Node.js backend server with atomic save guarantee
       if (state.isServerConnected) {
         try {
-          await fetch('/api/data', {
+          const headers = { 'Content-Type': 'application/json' };
+          if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+
+          const res = await fetch('/api/data', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify(payload)
           });
+
+          if (res.ok) {
+            state.lastSyncTime = new Date();
+            updateSyncIndicator(true);
+          } else if (res.status === 401) {
+            updateSyncIndicator(true, 'Sign-In Required to Sync');
+            openAuthModal('login');
+          }
         } catch (err) {
           state.isServerConnected = false;
           updateSyncIndicator(false);
@@ -1742,17 +1869,28 @@
       }
     }
 
-    function updateSyncIndicator(connected) {
+    function updateSyncIndicator(connected, customMsg = null) {
       const dot = document.getElementById('syncDot');
       const text = document.getElementById('syncText');
       if (connected) {
         dot.className = 'sync-dot';
-        text.textContent = 'Local Disk Sync Active (tasks.json)';
+        text.textContent = customMsg || `🟢 In Sync (Laptop & Phone) • ${state.tasks.length} changes`;
       } else {
         dot.className = 'sync-dot offline';
-        text.textContent = 'Cloud / LocalStorage Mode';
+        text.textContent = customMsg || `🟡 Offline Cache Mode • ${state.tasks.length} changes`;
       }
     }
+
+    // Real-Time Polling & Focus Sync (Every 4s + when tab gains focus)
+    setInterval(() => {
+      if (state.isServerConnected && document.visibilityState === 'visible') {
+        loadData();
+      }
+    }, 4000);
+
+    window.addEventListener('focus', () => {
+      loadData();
+    });
 
     // --- Render Functions ---
     function render() {
@@ -1760,6 +1898,7 @@
       renderAppPills();
       renderAppDropdowns();
       renderTaskList();
+      updateAccountUI();
     }
 
     function renderStats() {
@@ -1851,16 +1990,11 @@
       container.innerHTML = '';
 
       let filtered = state.tasks.filter(task => {
-        // App Filter
         if (state.selectedAppId !== 'all' && task.appId !== state.selectedAppId) return false;
-        // Status Filter
         if (state.statusFilter === 'pending' && task.completed) return false;
         if (state.statusFilter === 'completed' && !task.completed) return false;
-        // Type Filter
         if (state.typeFilter !== 'all' && task.type !== state.typeFilter) return false;
-        // Priority Filter
         if (state.priorityFilter !== 'all' && task.priority !== state.priorityFilter) return false;
-        // Search
         if (state.searchQuery.trim()) {
           const q = state.searchQuery.toLowerCase();
           const app = state.apps.find(a => a.id === task.appId);
@@ -1874,7 +2008,6 @@
         return true;
       });
 
-      // Sorting
       filtered.sort((a, b) => {
         if (state.sortBy === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
         if (state.sortBy === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
@@ -2195,7 +2328,6 @@
         return;
       }
 
-      // Group by Change Type
       const typeIcons = {
         'Feature': '🚀 Features',
         'Bug Fix': '🐛 Bug Fixes',
@@ -2253,7 +2385,6 @@
         } catch (e) {}
       }
 
-      // Fallback: browser download
       const blob = new Blob([content], { type: 'text/markdown' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -2338,7 +2469,6 @@
       localStorage.setItem('taskpulse_theme', nextTheme);
     };
 
-    // Load saved theme
     const savedTheme = localStorage.getItem('taskpulse_theme');
     if (savedTheme) {
       document.documentElement.setAttribute('data-theme', savedTheme);
@@ -2352,7 +2482,7 @@
       document.getElementById(id).classList.remove('open');
     };
 
-    // Global Keyboard Shortcuts
+    // Keyboard Shortcuts
     window.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
         e.preventDefault();

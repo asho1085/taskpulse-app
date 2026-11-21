@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>TaskPulse - Multi-Device Task & Change Manager</title>
+  <title>TaskPulse - Supabase Cloud Task Manager</title>
+  <!-- Supabase JS Client (Official CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #0d1117;
@@ -16,6 +18,8 @@
       --primary: #2f81f7;
       --primary-hover: #388bfd;
       --primary-light: rgba(56, 139, 253, 0.15);
+      --supabase: #3ecf8e;
+      --supabase-light: rgba(62, 207, 142, 0.15);
       --success: #238636;
       --success-hover: #2ea043;
       --success-light: rgba(46, 160, 67, 0.15);
@@ -46,6 +50,8 @@
       --primary: #0969da;
       --primary-hover: #0860ca;
       --primary-light: rgba(9, 105, 218, 0.1);
+      --supabase: #1a9e63;
+      --supabase-light: rgba(26, 158, 99, 0.1);
       --success: #1a7f37;
       --success-hover: #1f883d;
       --success-light: rgba(31, 136, 61, 0.1);
@@ -79,7 +85,6 @@
       overflow-x: hidden;
     }
 
-    /* Top Navigation Bar */
     header {
       background: var(--surface);
       border-bottom: 1px solid var(--surface-border);
@@ -108,14 +113,14 @@
       width: 34px;
       height: 34px;
       border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--primary), var(--purple));
+      background: linear-gradient(135deg, var(--supabase), var(--primary));
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-weight: 700;
       font-size: 17px;
-      box-shadow: 0 2px 8px rgba(47, 129, 247, 0.4);
+      box-shadow: 0 2px 8px rgba(62, 207, 142, 0.4);
       flex-shrink: 0;
     }
 
@@ -132,7 +137,6 @@
       display: block;
     }
 
-    /* Search & Stats Header Center */
     .header-center {
       flex: 1;
       max-width: 480px;
@@ -189,7 +193,6 @@
       pointer-events: none;
     }
 
-    /* Header Actions */
     .header-actions {
       display: flex;
       align-items: center;
@@ -236,10 +239,15 @@
       border-color: var(--text-dim);
     }
 
-    .btn-success {
-      background: var(--success);
-      color: #fff;
+    .btn-supabase {
+      background: var(--supabase);
+      color: #0d1117;
+      font-weight: 600;
       padding: 7px 14px;
+    }
+
+    .btn-supabase:hover {
+      background: #4de29e;
     }
 
     .btn-icon {
@@ -254,18 +262,11 @@
       background: var(--surface-hover);
     }
 
-    /* Account & Sync Badges in Header */
-    .account-badge-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .user-pill {
+    .supabase-pill {
       background: var(--surface-hover);
       border: 1px solid var(--surface-border);
       color: var(--text);
-      padding: 5px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
@@ -274,22 +275,35 @@
       gap: 6px;
     }
 
+    .supabase-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--supabase);
+      box-shadow: 0 0 6px rgba(62, 207, 142, 0.8);
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
     .btn-connect-phone {
-      background: linear-gradient(135deg, rgba(47, 129, 247, 0.2), rgba(137, 87, 229, 0.2));
-      border: 1px solid var(--primary);
+      background: linear-gradient(135deg, rgba(62, 207, 142, 0.2), rgba(47, 129, 247, 0.2));
+      border: 1px solid var(--supabase);
       color: var(--text);
-      padding: 5px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
     }
 
     .btn-connect-phone:hover {
-      background: var(--primary);
-      color: #fff;
+      background: var(--supabase);
+      color: #0d1117;
     }
 
-    /* Main Container */
     .container {
       max-width: 1280px;
       width: 100%;
@@ -301,24 +315,6 @@
       flex: 1;
     }
 
-    /* Sync Alert Banner */
-    .sync-alert-banner {
-      background: linear-gradient(90deg, rgba(47, 129, 247, 0.12), rgba(35, 134, 54, 0.12));
-      border: 1px solid var(--primary-light);
-      border-radius: var(--radius-md);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      gap: 12px;
-    }
-
-    .sync-alert-banner strong {
-      color: var(--primary);
-    }
-
-    /* Quick Overview Stats Bar */
     .stats-bar {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -361,12 +357,11 @@
 
     .stat-progress-fill {
       height: 100%;
-      background: var(--success);
+      background: var(--supabase);
       width: 0%;
       transition: width 0.3s ease;
     }
 
-    /* Apps Row / Tabs */
     .apps-section {
       background: var(--surface);
       border: 1px solid var(--surface-border);
@@ -423,17 +418,18 @@
     }
 
     .app-pill.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(47, 129, 247, 0.35);
+      background: var(--supabase);
+      border-color: var(--supabase);
+      color: #0d1117;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(62, 207, 142, 0.35);
     }
 
     .app-pill-count {
       font-size: 10px;
       padding: 1px 6px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
     }
 
     .app-pill:not(.active) .app-pill-count {
@@ -453,12 +449,11 @@
     }
 
     .btn-add-app:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      background: var(--primary-light);
+      border-color: var(--supabase);
+      color: var(--supabase);
+      background: var(--supabase-light);
     }
 
-    /* Fast Quick Add Bar */
     .quick-add-card {
       background: var(--surface);
       border: 1px solid var(--surface-border);
@@ -473,7 +468,7 @@
     .quick-add-title {
       font-size: 12px;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--supabase);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: flex;
@@ -500,8 +495,8 @@
     }
 
     .quick-input-title:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-light);
+      border-color: var(--supabase);
+      box-shadow: 0 0 0 3px var(--supabase-light);
     }
 
     select.quick-select {
@@ -516,7 +511,7 @@
     }
 
     select.quick-select:focus {
-      border-color: var(--primary);
+      border-color: var(--supabase);
     }
 
     .quick-input-ver {
@@ -530,7 +525,6 @@
       outline: none;
     }
 
-    /* Filters and View Bar */
     .filter-bar {
       display: flex;
       align-items: center;
@@ -564,8 +558,8 @@
     }
 
     .status-tab.active {
-      background: var(--primary-light);
-      color: var(--primary);
+      background: var(--supabase-light);
+      color: var(--supabase);
       font-weight: 600;
     }
 
@@ -576,14 +570,12 @@
       flex-wrap: wrap;
     }
 
-    /* Task List Container */
     .task-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    /* Task Card */
     .task-card {
       background: var(--surface);
       border: 1px solid var(--surface-border);
@@ -611,7 +603,6 @@
       opacity: 0.95;
     }
 
-    /* Completer Checkbox */
     .completer-btn {
       width: 24px;
       height: 24px;
@@ -627,21 +618,21 @@
     }
 
     .completer-btn:hover {
-      border-color: var(--success);
-      background: var(--success-light);
+      border-color: var(--supabase);
+      background: var(--supabase-light);
     }
 
     .task-card.completed .completer-btn {
-      background: var(--success);
-      border-color: var(--success);
+      background: var(--supabase);
+      border-color: var(--supabase);
     }
 
     .completer-icon {
       display: none;
       width: 15px;
       height: 15px;
-      stroke: #ffffff;
-      stroke-width: 3;
+      stroke: #0d1117;
+      stroke-width: 3.5;
       fill: none;
     }
 
@@ -649,7 +640,6 @@
       display: block;
     }
 
-    /* Task Content */
     .task-content {
       flex: 1;
       display: flex;
@@ -677,8 +667,8 @@
     }
 
     .badge-app:hover {
-      border-color: var(--primary);
-      color: var(--primary);
+      border-color: var(--supabase);
+      color: var(--supabase);
     }
 
     .badge-type {
@@ -689,7 +679,7 @@
       text-transform: capitalize;
     }
 
-    .type-feature { background: var(--success-light); color: #3fb950; }
+    .type-feature { background: var(--supabase-light); color: var(--supabase); }
     .type-bug-fix { background: var(--danger-light); color: #f85149; }
     .type-ui-ux { background: var(--purple-light); color: #bc8cff; }
     .type-performance { background: var(--warning-light); color: #e3b341; }
@@ -754,7 +744,6 @@
       flex-wrap: wrap;
     }
 
-    /* Actions on card */
     .task-actions {
       display: flex;
       align-items: center;
@@ -785,7 +774,6 @@
       background: var(--danger-light);
     }
 
-    /* Empty state */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -809,7 +797,6 @@
       max-width: 400px;
     }
 
-    /* Modals */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -889,8 +876,8 @@
     }
 
     .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-light);
+      border-color: var(--supabase);
+      box-shadow: 0 0 0 3px var(--supabase-light);
     }
 
     textarea.form-control {
@@ -917,33 +904,6 @@
       gap: 10px;
     }
 
-    /* Auth Modal Tabs */
-    .auth-tab-bar {
-      display: flex;
-      background: var(--bg);
-      border-radius: var(--radius-sm);
-      padding: 3px;
-      margin-bottom: 6px;
-      gap: 4px;
-    }
-
-    .auth-tab-btn {
-      flex: 1;
-      padding: 8px 12px;
-      border-radius: 4px;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .auth-tab-btn.active {
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-
-    /* QR Code Display Card */
     .qr-card {
       background: #ffffff;
       padding: 16px;
@@ -952,8 +912,9 @@
       align-items: center;
       justify-content: center;
       margin: 10px auto;
-      width: 200px;
-      height: 200px;
+      width: 220px;
+      height: 220px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
 
     .qr-card img {
@@ -962,7 +923,6 @@
       image-rendering: pixelated;
     }
 
-    /* Toast Notification */
     .toast-container {
       position: fixed;
       bottom: 24px;
@@ -994,7 +954,6 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* Canvas Confetti */
     #confettiCanvas {
       position: fixed;
       top: 0;
@@ -1005,7 +964,6 @@
       z-index: 9999;
     }
 
-    /* Status indicator in footer */
     footer {
       border-top: 1px solid var(--surface-border);
       padding: 12px 24px;
@@ -1027,16 +985,10 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 6px rgba(35, 134, 54, 0.6);
+      background: var(--supabase);
+      box-shadow: 0 0 6px rgba(62, 207, 142, 0.8);
     }
 
-    .sync-dot.offline {
-      background: var(--warning);
-      box-shadow: none;
-    }
-
-    /* Mobile Floating Action Button (FAB) */
     .mobile-fab {
       display: none;
       position: fixed;
@@ -1045,9 +997,9 @@
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(47, 129, 247, 0.45);
+      background: var(--supabase);
+      color: #0d1117;
+      box-shadow: 0 6px 20px rgba(62, 207, 142, 0.45);
       z-index: 999;
       border: none;
       cursor: pointer;
@@ -1058,10 +1010,9 @@
 
     .mobile-fab:active {
       transform: scale(0.92);
-      background: var(--primary-hover);
+      background: #4de29e;
     }
 
-    /* Responsive Queries */
     @media (max-width: 860px) {
       header {
         flex-direction: column;
@@ -1159,15 +1110,20 @@
         <div class="logo-badge">⚡</div>
         <div class="brand-text">
           <h1>TaskPulse</h1>
-          <span>Laptop & Mobile Task Sync</span>
+          <span>Supabase Cloud Sync</span>
         </div>
       </div>
 
       <div class="header-actions">
-        <!-- Account Status & Phone Connect -->
-        <div class="account-badge-wrap" id="accountBadgeWrap">
-          <!-- Rendered dynamically -->
+        <!-- Supabase Cloud Pill -->
+        <div class="supabase-pill" id="cloudStatusPill">
+          <div class="supabase-dot"></div>
+          <span>Supabase Live</span>
         </div>
+
+        <button class="btn-connect-phone" id="btnOpenPhoneModal" title="Open and sync on phone">
+          📱 Sync with Phone
+        </button>
 
         <button class="btn-primary desktop-only" id="btnOpenNewTaskModal">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/></svg>
@@ -1200,14 +1156,6 @@
 
   <!-- Main View Container -->
   <main class="container">
-    <!-- Notice Banner if not logged in -->
-    <div class="sync-alert-banner" id="authBanner" style="display:none;">
-      <div>
-        <strong>📱 Multi-Device Sync Ready:</strong> Create or log in with an account to sync tasks live between your laptop and phone with zero data loss.
-      </div>
-      <button class="btn-primary" onclick="openAuthModal('register')" style="padding:4px 10px; font-size:11px; white-space:nowrap;">Sign In / Register</button>
-    </div>
-
     <!-- Top Stats Bar -->
     <section class="stats-bar">
       <div class="stat-card">
@@ -1227,7 +1175,7 @@
       <div class="stat-card">
         <div class="stat-info">
           <div class="stat-label">Completed</div>
-          <div class="stat-value" style="color:var(--success)" id="statCompleted">0</div>
+          <div class="stat-value" style="color:var(--supabase)" id="statCompleted">0</div>
         </div>
         <div style="font-size:22px">✅</div>
       </div>
@@ -1284,7 +1232,7 @@
           <option value="Low">Low</option>
         </select>
         <input type="text" id="quickVersion" class="quick-input-ver" placeholder="v1.0.0" />
-        <button type="submit" class="btn-primary" style="white-space:nowrap;">+ Add</button>
+        <button type="submit" class="btn-supabase" style="white-space:nowrap;">+ Add</button>
       </form>
     </section>
 
@@ -1339,77 +1287,41 @@
   <footer>
     <div class="sync-status">
       <div class="sync-dot" id="syncDot"></div>
-      <span id="syncText">Checking local server...</span>
+      <span id="syncText">Connected to Supabase Cloud</span>
     </div>
-    <div>TaskPulse • Multi-Device Protected Sync</div>
+    <div>TaskPulse • Powered by Supabase Database</div>
   </footer>
 
-  <!-- Modal: Authentication (Sign In / Register) -->
-  <div class="modal-backdrop" id="authModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title" id="authModalTitle">My Account (Laptop & Phone Sync)</div>
-        <button class="btn-card-action" onclick="closeModal('authModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="auth-tab-bar">
-          <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">Log In</button>
-          <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="switchAuthTab('register')">Create Account</button>
-        </div>
-
-        <p id="authNote" style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          Log in with your account to access your tasks from your laptop and phone.
-        </p>
-
-        <form id="authForm" style="display:flex; flex-direction:column; gap:12px;">
-          <div class="form-group">
-            <label class="form-label" for="authUsername">Username</label>
-            <input type="text" id="authUsername" class="form-control" placeholder="e.g. asho" autocomplete="username" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="authPassword">Password</label>
-            <input type="password" id="authPassword" class="form-control" placeholder="Enter your password" autocomplete="current-password" required />
-          </div>
-          <div id="authError" style="color:var(--danger-hover); font-size:12px; display:none;"></div>
-
-          <button type="submit" class="btn-primary" id="btnAuthSubmit" style="padding:10px; margin-top:4px;">
-            Log In
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: Connect Phone (QR Code & WiFi URL) -->
+  <!-- Modal: Connect Phone (Instant QR Code) -->
   <div class="modal-backdrop" id="phoneModal">
     <div class="modal-card" style="text-align:center;">
       <div class="modal-header">
-        <div class="modal-title">📱 Connect Your Phone</div>
+        <div class="modal-title">📱 Connect Your Phone (Supabase Cloud Sync)</div>
         <button class="btn-card-action" onclick="closeModal('phoneModal')">✕</button>
       </div>
       <div class="modal-body" style="align-items:center;">
         <p style="font-size:13px; color:var(--text-muted); max-width:380px;">
-          Connect your phone to the <strong>same Wi-Fi network</strong> as this laptop and scan this QR code or type the link below:
+          Scan this QR code with your phone camera to open the live app. Both your phone and laptop will sync the exact same tasks in real time!
         </p>
 
         <div class="qr-card">
           <img id="qrImage" alt="Scan QR Code with Phone" />
         </div>
 
-        <div style="background:var(--bg); border:1px solid var(--surface-border); padding:8px 14px; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:14px; color:var(--primary); font-weight:600; user-select:all;" id="phoneUrlText">
-          http://192.168.0.102:4321
+        <div style="background:var(--bg); border:1px solid var(--surface-border); padding:8px 12px; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:13px; color:var(--supabase); font-weight:600; word-break:break-all; user-select:all;" id="phoneUrlText">
+          https://asho1085.github.io/taskpulse-app/
         </div>
 
         <button type="button" class="btn-secondary" id="btnCopyPhoneUrl" style="margin-top:6px; font-size:12px;">
-          📋 Copy Phone URL
+          📋 Copy Live Phone Link
         </button>
 
         <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.4;">
-          🔒 <strong>Zero Data Loss Guarantee:</strong> Changes made on your laptop or phone save to the laptop backend instantly.
+          ⚡ <strong>Supabase Real-Time:</strong> Whenever you change a task on phone or laptop, both screens update automatically.
         </div>
       </div>
       <div class="modal-footer" style="justify-content:center;">
-        <button type="button" class="btn-primary" onclick="closeModal('phoneModal')">Got It</button>
+        <button type="button" class="btn-supabase" onclick="closeModal('phoneModal')">Done</button>
       </div>
     </div>
   </div>
@@ -1465,7 +1377,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-secondary" onclick="closeModal('taskModal')">Cancel</button>
-          <button type="submit" class="btn-primary" id="btnSaveTask">Save Change</button>
+          <button type="submit" class="btn-supabase" id="btnSaveTask">Save Change</button>
         </div>
       </form>
     </div>
@@ -1481,7 +1393,7 @@
       <div class="modal-body">
         <form id="newAppForm" style="display:flex; gap:8px;">
           <input type="text" id="newAppName" class="form-control" placeholder="New App Name (e.g. PhotoEditor)" required style="flex:1" />
-          <button type="submit" class="btn-primary" style="white-space:nowrap;">+ Add App</button>
+          <button type="submit" class="btn-supabase" style="white-space:nowrap;">+ Add App</button>
         </form>
         <div style="font-size:12px; font-weight:600; color:var(--text-muted); margin-top:8px;">Current Apps:</div>
         <div id="manageAppsList" style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -1507,8 +1419,7 @@
         <textarea id="changelogOutput" class="form-control" style="height:260px; font-family:var(--font-mono); font-size:12px;" readonly></textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn-secondary" id="btnSaveChangelogDisk">💾 Save File</button>
-        <button type="button" class="btn-primary" id="btnCopyChangelog">📋 Copy to Clipboard</button>
+        <button type="button" class="btn-supabase" id="btnCopyChangelog">📋 Copy to Clipboard</button>
       </div>
     </div>
   </div>
@@ -1541,14 +1452,17 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    // --- State & Storage ---
+    // --- Official Supabase Credentials ---
+    const SUPABASE_URL = 'https://toswtblnqaezhsucfhqn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_RQKRE-5BM-nWoclA8Q3ZNQ_KlGlEvfD';
     const STORAGE_KEY = 'taskpulse_laptop_data';
-    const TOKEN_KEY = 'taskpulse_token';
-    const USER_KEY = 'taskpulse_user';
+
+    // Initialize Supabase Client
+    const supabaseClient = (window.supabase && window.supabase.createClient)
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+      : null;
 
     let state = {
-      user: JSON.parse(localStorage.getItem(USER_KEY) || 'null'),
-      token: localStorage.getItem(TOKEN_KEY) || '',
       apps: [],
       tasks: [],
       selectedAppId: 'all',
@@ -1557,13 +1471,10 @@
       priorityFilter: 'all',
       sortBy: 'newest',
       searchQuery: '',
-      isServerConnected: false,
-      lastSyncTime: null,
-      authMode: 'login',
-      phoneUrl: 'http://192.168.0.102:4321'
+      isCloudConnected: false
     };
 
-    // --- Sound Effects (Web Audio API - 0 external files) ---
+    // --- Sound Effects ---
     let audioCtx = null;
     function playCompleteSound() {
       try {
@@ -1572,8 +1483,8 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.12); // A5
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.12);
         gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
         osc.connect(gain);
@@ -1583,7 +1494,7 @@
       } catch (e) {}
     }
 
-    // --- Confetti Particles Effect (Vanilla JS Canvas) ---
+    // --- Confetti Particles Effect ---
     const canvas = document.getElementById('confettiCanvas');
     const ctx = canvas.getContext('2d');
     let confetti = [];
@@ -1596,7 +1507,7 @@
     resizeCanvas();
 
     function triggerConfetti() {
-      const colors = ['#2ea043', '#388bfd', '#8957e5', '#39c5cf', '#d29922', '#f85149'];
+      const colors = ['#3ecf8e', '#388bfd', '#8957e5', '#39c5cf', '#d29922', '#f85149'];
       for (let i = 0; i < 40; i++) {
         confetti.push({
           x: window.innerWidth / 2 + (Math.random() - 0.5) * 260,
@@ -1646,251 +1557,169 @@
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(8px)';
         setTimeout(() => toast.remove(), 250);
-      }, 3000);
+      }, 2800);
     }
 
-    // --- Authentication Logic ---
-    function updateAccountUI() {
-      const wrap = document.getElementById('accountBadgeWrap');
-      const banner = document.getElementById('authBanner');
-
-      if (state.user && state.token) {
-        wrap.innerHTML = `
-          <div class="user-pill">
-            <span>👤 ${escapeHtml(state.user.username)}</span>
-          </div>
-          <button class="btn-connect-phone" id="btnOpenPhoneModal" title="Open on Phone">
-            📱 Phone Sync
-          </button>
-          <button class="btn-card-action" onclick="logout()" title="Log Out" style="font-size:12px;">
-            🚪
-          </button>
-        `;
-        document.getElementById('btnOpenPhoneModal').onclick = openPhoneModal;
-        if (banner) banner.style.display = 'none';
-      } else {
-        wrap.innerHTML = `
-          <button class="btn-secondary" onclick="openAuthModal('login')" style="font-size:12px; font-weight:600;">
-            🔑 Sign In
-          </button>
-          <button class="btn-connect-phone" id="btnOpenPhoneModal" title="Open on Phone">
-            📱 Phone Sync
-          </button>
-        `;
-        document.getElementById('btnOpenPhoneModal').onclick = openPhoneModal;
-        if (banner) banner.style.display = 'flex';
-      }
-    }
-
-    window.openAuthModal = function(mode = 'login') {
-      switchAuthTab(mode);
-      document.getElementById('authError').style.display = 'none';
-      openModal('authModal');
-    };
-
-    window.switchAuthTab = function(mode) {
-      state.authMode = mode;
-      const tabLogin = document.getElementById('tabBtnLogin');
-      const tabRegister = document.getElementById('tabBtnRegister');
-      const note = document.getElementById('authNote');
-      const submit = document.getElementById('btnAuthSubmit');
-
-      if (mode === 'login') {
-        tabLogin.className = 'auth-tab-btn active';
-        tabRegister.className = 'auth-tab-btn';
-        note.innerHTML = 'Log in with your username and password to sync your tasks with this laptop or phone.';
-        submit.textContent = 'Log In';
-      } else {
-        tabRegister.className = 'auth-tab-btn active';
-        tabLogin.className = 'auth-tab-btn';
-        note.innerHTML = '✨ <strong>Zero Data Loss:</strong> Any existing tasks will be automatically attached to your new account.';
-        submit.textContent = 'Create Account & Sync My Tasks';
-      }
-    };
-
-    document.getElementById('authForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('authUsername').value.trim();
-      const password = document.getElementById('authPassword').value;
-      const errEl = document.getElementById('authError');
-      errEl.style.display = 'none';
-
-      const endpoint = state.authMode === 'register' ? '/api/auth/register' : '/api/auth/login';
-
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          errEl.textContent = data.error || 'Authentication failed';
-          errEl.style.display = 'block';
-          return;
-        }
-
-        // Save session
-        state.token = data.token;
-        state.user = data.user;
-        localStorage.setItem(TOKEN_KEY, data.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(data.user));
-
-        closeModal('authModal');
-        updateAccountUI();
-        showToast(`Welcome ${data.user.username}! In sync.`, '🎉');
-
-        // Immediately load user's data
-        await loadData();
-      } catch (err) {
-        errEl.textContent = 'Could not reach server. Ensure laptop server is running.';
-        errEl.style.display = 'block';
-      }
-    });
-
-    window.logout = async function() {
-      if (!confirm('Log out from this device?')) return;
-      try {
-        if (state.token) {
-          await fetch('/api/auth/logout', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${state.token}` }
-          });
-        }
-      } catch (e) {}
-
-      state.token = '';
-      state.user = null;
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
-      updateAccountUI();
-      showToast('Logged out');
-      loadData();
-    };
-
-    // --- Phone Connection Modal & QR Code ---
-    async function openPhoneModal() {
-      try {
-        const res = await fetch('/api/network-info');
-        if (res.ok) {
-          const info = await res.json();
-          if (info.ips && info.ips.length > 0) {
-            state.phoneUrl = `http://${info.ips[0]}:${info.port}`;
-          }
-        }
-      } catch (e) {}
-
-      document.getElementById('phoneUrlText').textContent = state.phoneUrl;
-
-      // Generate QR Code via clean SVG encoder (instant, 100% offline)
-      const encodedUrl = encodeURIComponent(state.phoneUrl);
-      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedUrl}`;
-
-      openModal('phoneModal');
-    }
-
-    document.getElementById('btnCopyPhoneUrl').onclick = () => {
-      navigator.clipboard.writeText(state.phoneUrl).then(() => {
-        showToast('Phone URL copied to clipboard!', '📋');
-      });
-    };
-
-    // --- Data Persistence: Server (tasks.json) + LocalStorage Dual-Sync ---
+    // --- Supabase Cloud Sync Engine ---
     async function loadData() {
-      try {
-        const headers = {};
-        if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+      // 1. Try Supabase Cloud Database first
+      if (supabaseClient) {
+        try {
+          const [appsRes, tasksRes] = await Promise.all([
+            supabaseClient.from('apps').select('*'),
+            supabaseClient.from('tasks').select('*')
+          ]);
 
-        const res = await fetch('/api/data', { cache: 'no-store', headers });
-        if (res.ok) {
-          const data = await res.json();
-          state.apps = data.apps || [];
-          state.tasks = data.tasks || [];
-          state.isServerConnected = true;
-          state.lastSyncTime = new Date();
+          if (!appsRes.error && !tasksRes.error && appsRes.data && tasksRes.data && (appsRes.data.length > 0 || tasksRes.data.length > 0)) {
+            // Map Supabase snake_case fields to app model
+            state.apps = appsRes.data.map(a => ({
+              id: a.id,
+              name: a.name,
+              description: a.description || '',
+              createdAt: a.created_at
+            }));
 
-          // Save local backup copy
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
-          updateSyncIndicator(true);
-          render();
-          return;
-        } else if (res.status === 401) {
-          // Server requires authentication
-          state.isServerConnected = true;
-          updateSyncIndicator(true, 'Sign-In Required');
+            state.tasks = tasksRes.data.map(t => ({
+              id: t.id,
+              appId: t.app_id,
+              title: t.title,
+              type: t.type || 'Feature',
+              priority: t.priority || 'Medium',
+              version: t.version || null,
+              notes: t.notes || '',
+              completed: !!t.completed,
+              createdAt: t.created_at,
+              completedAt: t.completed_at
+            }));
+
+            state.isCloudConnected = true;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
+            updateSyncIndicator(true);
+            render();
+            return;
+          }
+        } catch (err) {
+          console.warn('Supabase fetch failed, checking local cache', err);
         }
-      } catch (err) {
-        state.isServerConnected = false;
       }
 
-      // Offline fallback: load from LocalStorage with zero data loss
-      updateSyncIndicator(false);
+      // 2. Fallback to LocalStorage (Zero data loss guarantee)
       const local = localStorage.getItem(STORAGE_KEY);
       if (local) {
         try {
           const parsed = JSON.parse(local);
           state.apps = parsed.apps || [];
           state.tasks = parsed.tasks || [];
-        } catch (e) {}
+        } catch (e) {
+          seedInitialData();
+        }
+      } else {
+        seedInitialData();
       }
+
+      updateSyncIndicator(state.isCloudConnected);
       render();
     }
 
+    function seedInitialData() {
+      state.apps = [
+        { id: 'app-1795277810370', name: 'python editor', description: '' }
+      ];
+      state.tasks = [
+        { id: 'task-1795277911578', appId: 'app-1795277810370', title: 'make the design responsive', type: 'Performance', priority: 'High', version: null, notes: '', completed: false, createdAt: new Date().toISOString(), completedAt: null },
+        { id: 'task-1795277889871', appId: 'app-1795277810370', title: 'selecting text and selecting all texts is not working fix it', type: 'Performance', priority: 'High', version: null, notes: '', completed: false, createdAt: new Date().toISOString(), completedAt: null },
+        { id: 'task-1795277842658', appId: 'app-1795277810370', title: 'Enter button is no working fix it', type: 'Performance', priority: 'High', version: null, notes: '', completed: false, createdAt: new Date().toISOString(), completedAt: null }
+      ];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
+    }
+
     async function saveData() {
-      const payload = { apps: state.apps, tasks: state.tasks };
-
       // 1. Immediately write to LocalStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
 
-      // 2. Synchronize to Node.js backend server with atomic save guarantee
-      if (state.isServerConnected) {
+      // 2. Synchronize to Supabase Database
+      if (supabaseClient) {
         try {
-          const headers = { 'Content-Type': 'application/json' };
-          if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+          const appsToInsert = state.apps.map(a => ({
+            id: a.id,
+            name: a.name,
+            description: a.description || ''
+          }));
 
-          const res = await fetch('/api/data', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(payload)
-          });
+          const tasksToInsert = state.tasks.map(t => ({
+            id: t.id,
+            app_id: t.appId,
+            title: t.title,
+            type: t.type,
+            priority: t.priority,
+            version: t.version,
+            notes: t.notes,
+            completed: t.completed,
+            created_at: t.createdAt,
+            completed_at: t.completedAt
+          }));
 
-          if (res.ok) {
-            state.lastSyncTime = new Date();
-            updateSyncIndicator(true);
-          } else if (res.status === 401) {
-            updateSyncIndicator(true, 'Sign-In Required to Sync');
-            openAuthModal('login');
-          }
+          await Promise.all([
+            supabaseClient.from('apps').upsert(appsToInsert),
+            supabaseClient.from('tasks').upsert(tasksToInsert)
+          ]);
+          state.isCloudConnected = true;
+          updateSyncIndicator(true);
         } catch (err) {
-          state.isServerConnected = false;
           updateSyncIndicator(false);
         }
       }
     }
 
-    function updateSyncIndicator(connected, customMsg = null) {
+    function updateSyncIndicator(connected) {
       const dot = document.getElementById('syncDot');
       const text = document.getElementById('syncText');
       if (connected) {
-        dot.className = 'sync-dot';
-        text.textContent = customMsg || `🟢 In Sync (Laptop & Phone) • ${state.tasks.length} changes`;
+        dot.style.background = 'var(--supabase)';
+        text.textContent = `⚡ Supabase Cloud Synced • ${state.tasks.length} changes`;
       } else {
-        dot.className = 'sync-dot offline';
-        text.textContent = customMsg || `🟡 Offline Cache Mode • ${state.tasks.length} changes`;
+        dot.style.background = 'var(--warning)';
+        text.textContent = `🟡 Local Cache Mode • ${state.tasks.length} changes`;
       }
     }
 
-    // Real-Time Polling & Focus Sync (Every 4s + when tab gains focus)
-    setInterval(() => {
-      if (state.isServerConnected && document.visibilityState === 'visible') {
-        loadData();
-      }
-    }, 4000);
+    // Supabase Real-Time Listener (WebSocket Sync across devices)
+    if (supabaseClient) {
+      try {
+        supabaseClient
+          .channel('schema-db-changes')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
+            loadData();
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'apps' }, () => {
+            loadData();
+          })
+          .subscribe();
+      } catch (e) {}
+    }
 
+    // Window Focus Refresh
     window.addEventListener('focus', () => {
       loadData();
     });
+
+    // --- Phone Connection Modal & QR Code ---
+    function openPhoneModal() {
+      const livePhoneUrl = 'https://asho1085.github.io/taskpulse-app/';
+      document.getElementById('phoneUrlText').textContent = livePhoneUrl;
+      const encoded = encodeURIComponent(livePhoneUrl);
+      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}`;
+      openModal('phoneModal');
+    }
+
+    document.getElementById('btnOpenPhoneModal').onclick = openPhoneModal;
+
+    document.getElementById('btnCopyPhoneUrl').onclick = () => {
+      const url = document.getElementById('phoneUrlText').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Link copied to clipboard!', '📋');
+      });
+    };
 
     // --- Render Functions ---
     function render() {
@@ -1898,7 +1727,6 @@
       renderAppPills();
       renderAppDropdowns();
       renderTaskList();
-      updateAccountUI();
     }
 
     function renderStats() {
@@ -1922,14 +1750,12 @@
       const container = document.getElementById('appsList');
       container.innerHTML = '';
 
-      // All Apps pill
       const allPill = document.createElement('button');
       allPill.className = `app-pill ${state.selectedAppId === 'all' ? 'active' : ''}`;
       allPill.innerHTML = `All Apps <span class="app-pill-count">${state.tasks.length}</span>`;
       allPill.onclick = () => { state.selectedAppId = 'all'; render(); };
       container.appendChild(allPill);
 
-      // Individual apps
       state.apps.forEach(app => {
         const appTasks = state.tasks.filter(t => t.appId === app.id);
         const compCount = appTasks.filter(t => t.completed).length;
@@ -1943,7 +1769,6 @@
         container.appendChild(pill);
       });
 
-      // Add App button
       const addBtn = document.createElement('button');
       addBtn.className = 'btn-add-app';
       addBtn.innerHTML = '+ New App';
@@ -2074,7 +1899,7 @@
     }
 
     // --- Action Handlers ---
-    window.toggleTaskComplete = function(taskId) {
+    window.toggleTaskComplete = async function(taskId) {
       const task = state.tasks.find(t => t.id === taskId);
       if (!task) return;
 
@@ -2089,6 +1914,15 @@
 
       saveData();
       render();
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('tasks').update({
+            completed: task.completed,
+            completed_at: task.completedAt
+          }).eq('id', taskId);
+        } catch (e) {}
+      }
     };
 
     window.filterByApp = function(appId) {
@@ -2096,7 +1930,7 @@
       render();
     };
 
-    window.deleteTask = function(taskId) {
+    window.deleteTask = async function(taskId) {
       const task = state.tasks.find(t => t.id === taskId);
       if (!task) return;
       if (confirm(`Delete change "${task.title}"?`)) {
@@ -2104,11 +1938,17 @@
         saveData();
         render();
         showToast('Change deleted');
+
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('tasks').delete().eq('id', taskId);
+          } catch (e) {}
+        }
       }
     };
 
     // Quick Add Form
-    document.getElementById('quickAddForm').addEventListener('submit', (e) => {
+    document.getElementById('quickAddForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('quickTitle').value.trim();
       const appId = document.getElementById('quickAppSelect').value;
@@ -2120,7 +1960,7 @@
 
       const newTask = {
         id: 'task-' + Date.now(),
-        appId: appId || (state.apps[0] ? state.apps[0].id : 'app-1'),
+        appId: appId || (state.apps[0] ? state.apps[0].id : 'app-1795277810370'),
         title: title,
         type: type,
         priority: priority,
@@ -2137,7 +1977,23 @@
 
       document.getElementById('quickTitle').value = '';
       document.getElementById('quickVersion').value = '';
-      showToast('Change added successfully!', '⚡');
+      showToast('Change saved to Supabase cloud!', '⚡');
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('tasks').insert([{
+            id: newTask.id,
+            app_id: newTask.appId,
+            title: newTask.title,
+            type: newTask.type,
+            priority: newTask.priority,
+            version: newTask.version,
+            notes: newTask.notes,
+            completed: false,
+            created_at: newTask.createdAt
+          }]);
+        } catch (e) {}
+      }
     });
 
     // Detailed Task Modal
@@ -2174,7 +2030,7 @@
       openModal('taskModal');
     };
 
-    document.getElementById('taskForm').addEventListener('submit', (e) => {
+    document.getElementById('taskForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const editId = document.getElementById('editTaskId').value;
       const appId = document.getElementById('taskModalApp').value;
@@ -2195,8 +2051,21 @@
           task.notes = notes;
         }
         showToast('Change updated');
+
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('tasks').update({
+              app_id: appId,
+              title: title,
+              type: type,
+              priority: priority,
+              version: version || null,
+              notes: notes
+            }).eq('id', editId);
+          } catch (e) {}
+        }
       } else {
-        state.tasks.unshift({
+        const newTask = {
           id: 'task-' + Date.now(),
           appId,
           title,
@@ -2207,8 +2076,25 @@
           completed: false,
           createdAt: new Date().toISOString(),
           completedAt: null
-        });
-        showToast('Change added');
+        };
+        state.tasks.unshift(newTask);
+        showToast('Change added to Supabase');
+
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('tasks').insert([{
+              id: newTask.id,
+              app_id: newTask.appId,
+              title: newTask.title,
+              type: newTask.type,
+              priority: newTask.priority,
+              version: newTask.version,
+              notes: newTask.notes,
+              completed: false,
+              created_at: newTask.createdAt
+            }]);
+          } catch (e) {}
+        }
       }
 
       saveData();
@@ -2243,7 +2129,7 @@
       });
     }
 
-    document.getElementById('newAppForm').addEventListener('submit', (e) => {
+    document.getElementById('newAppForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('newAppName').value.trim();
       if (!name) return;
@@ -2265,9 +2151,19 @@
       renderManageAppsList();
       document.getElementById('newAppName').value = '';
       showToast(`App "${name}" created!`);
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('apps').insert([{
+            id: newApp.id,
+            name: newApp.name,
+            description: ''
+          }]);
+        } catch (e) {}
+      }
     });
 
-    window.renameApp = function(appId) {
+    window.renameApp = async function(appId) {
       const app = state.apps.find(a => a.id === appId);
       if (!app) return;
       const newName = prompt('Enter new name for app:', app.name);
@@ -2277,10 +2173,16 @@
         render();
         renderManageAppsList();
         showToast('App renamed');
+
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('apps').update({ name: app.name }).eq('id', appId);
+          } catch (e) {}
+        }
       }
     };
 
-    window.deleteApp = function(appId) {
+    window.deleteApp = async function(appId) {
       const app = state.apps.find(a => a.id === appId);
       if (!app) return;
       const count = state.tasks.filter(t => t.appId === appId).length;
@@ -2292,6 +2194,15 @@
         render();
         renderManageAppsList();
         showToast('App removed');
+
+        if (supabaseClient) {
+          try {
+            await Promise.all([
+              supabaseClient.from('apps').delete().eq('id', appId),
+              supabaseClient.from('tasks').delete().eq('app_id', appId)
+            ]);
+          } catch (e) {}
+        }
       }
     };
 
@@ -2320,7 +2231,7 @@
 
       const today = new Date().toISOString().split('T')[0];
       let md = `# Changelog - ${appTitle}\n\n`;
-      md += `*Generated on ${today} by TaskPulse*\n\n`;
+      md += `*Generated on ${today} by TaskPulse (Supabase Cloud)*\n\n`;
 
       if (targetTasks.length === 0) {
         md += `*No completed changes found for this app yet.*\n`;
@@ -2364,35 +2275,6 @@
       });
     };
 
-    document.getElementById('btnSaveChangelogDisk').onclick = async () => {
-      const appId = document.getElementById('changelogAppSelect').value;
-      const app = state.apps.find(a => a.id === appId);
-      const appName = app ? app.name : 'All';
-      const content = document.getElementById('changelogOutput').value;
-
-      if (state.isServerConnected) {
-        try {
-          const res = await fetch('/api/export-changelog', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ appName, content })
-          });
-          const result = await res.json();
-          if (result.success) {
-            showToast(`Saved as ${result.file}!`, '💾');
-            return;
-          }
-        } catch (e) {}
-      }
-
-      const blob = new Blob([content], { type: 'text/markdown' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `CHANGELOG-${appName}.md`;
-      a.click();
-      showToast(`Downloaded CHANGELOG-${appName}.md`, '💾');
-    };
-
     // --- Backup & Restore ---
     document.getElementById('btnOpenBackup').onclick = () => openModal('backupModal');
 
@@ -2419,7 +2301,7 @@
             saveData();
             render();
             closeModal('backupModal');
-            showToast('Data imported successfully!', '✓');
+            showToast('Data imported and synced to Supabase!', '✓');
           } else {
             alert('Invalid backup file format.');
           }
@@ -2524,7 +2406,7 @@
       return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     }
 
-    // Init
+    // Initialize & Fetch from Supabase
     loadData();
   </script>
 </body>

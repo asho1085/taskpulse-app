@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>TaskPulse — Task & Changelog Manager</title>
   
   <!-- Supabase Official JS Client -->
@@ -872,25 +872,240 @@
       transform: translateY(0);
     }
 
+    /* --------------------------------------------------------------------------
+       Mobile Responsive System (Mobile-first Touch & Bottom-Sheet Rules)
+       -------------------------------------------------------------------------- */
+    .mobile-fab {
+      display: none;
+      position: fixed;
+      bottom: max(20px, env(safe-area-inset-bottom, 20px));
+      right: 20px;
+      z-index: 90;
+      width: 52px;
+      height: 52px;
+      border-radius: 26px;
+      background-color: var(--accent-royal);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 180ms ease-out, transform 180ms ease-out;
+    }
+
+    .mobile-fab:active {
+      transform: scale(0.96);
+      background-color: var(--accent-hover);
+    }
+
+    .modal-handle {
+      display: none;
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background-color: var(--border-strong);
+      margin: 10px auto 4px auto;
+    }
+
+    .filter-dropdowns-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-12);
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .header-inner {
+        padding: 10px 14px;
         flex-wrap: wrap;
+        gap: 10px;
       }
+
       .header-search {
         order: 3;
         max-width: 100%;
+        width: 100%;
       }
-      .controls-surface {
+
+      .app-main {
+        padding: var(--space-16) var(--space-12);
+        gap: var(--space-16);
+      }
+
+      .btn-label {
+        display: none;
+      }
+
+      .header-actions {
+        gap: var(--space-4);
+      }
+
+      .btn {
+        padding: 7px 10px;
+      }
+
+      .sync-status-badge span {
+        display: none;
+      }
+
+      .sync-status-badge {
+        padding: 7px 9px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      /* Mobile FAB visible, hide header new task button */
+      .mobile-fab {
+        display: flex;
+      }
+
+      .btn-header-new {
+        display: none;
+      }
+
+      /* Apps tabs strip: smooth touch scrolling */
+      .apps-strip-section {
         flex-direction: column;
         align-items: stretch;
+        gap: var(--space-8);
       }
-      .form-row {
-        grid-template-columns: 1fr;
+
+      .apps-tabs-list {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
       }
+
+      .apps-tabs-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .app-tab {
+        flex-shrink: 0;
+      }
+
+      /* Controls Surface Mobile Layout */
+      .controls-surface {
+        padding: 12px;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .metrics-summary {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: 10px;
+        text-align: center;
+        gap: 8px;
+      }
+
+      .filter-group {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .filter-control {
+        width: 100%;
+      }
+
+      .segmented-control {
+        width: 100%;
+      }
+
+      .segmented-btn {
+        flex: 1;
+        text-align: center;
+        padding: 7px 4px;
+      }
+
+      .filter-dropdowns-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .filter-dropdowns-row .filter-control {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .select-input {
+        width: 100%;
+      }
+
+      /* Task items on mobile */
+      .task-item {
+        padding: 14px 12px;
+        gap: 12px;
+      }
+
+      .task-checkbox-btn {
+        width: 22px;
+        height: 22px;
+      }
+
+      .task-title {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .task-actions {
+        opacity: 1 !important;
+      }
+
+      .task-meta-row {
+        gap: 6px;
+      }
+
       .task-timestamp {
         margin-left: 0;
         width: 100%;
+        font-size: 11px;
+        margin-top: 2px;
+      }
+
+      /* Modal Bottom Sheets on Mobile */
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal-card {
+        border-radius: 16px 16px 0 0;
+        max-width: 100%;
+        width: 100%;
+        max-height: 85vh;
+        transform: translateY(100%);
+      }
+
+      .modal-handle {
+        display: block;
+      }
+
+      .modal-body {
+        padding: 16px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-12);
+      }
+
+      /* Prevent iOS Safari auto-zoom on inputs */
+      .form-input, .form-textarea, .select-input {
+        font-size: 16px;
+      }
+
+      .modal-footer {
+        padding: 12px 16px max(16px, env(safe-area-inset-bottom, 16px));
       }
     }
   </style>
@@ -924,22 +1139,22 @@
 
         <button class="btn btn-secondary" id="btnOpenPhone" title="Sync with mobile phone">
           <i data-lucide="smartphone"></i>
-          <span>Phone</span>
+          <span class="btn-label">Phone</span>
         </button>
 
         <button class="btn btn-secondary" id="btnOpenChangelog" title="Generate changelog">
           <i data-lucide="file-text"></i>
-          <span>Changelog</span>
+          <span class="btn-label">Changelog</span>
         </button>
 
         <button class="btn btn-secondary" id="btnOpenBackup" title="Manage backup and restore">
           <i data-lucide="database"></i>
-          <span>Backup</span>
+          <span class="btn-label">Backup</span>
         </button>
 
-        <button class="btn btn-primary" id="btnAddTaskModal">
+        <button class="btn btn-primary btn-header-new" id="btnAddTaskModal">
           <i data-lucide="plus"></i>
-          <span>New Task</span>
+          <span class="btn-label">New Task</span>
         </button>
       </div>
     </div>
@@ -963,41 +1178,6 @@
 
     <!-- Section 2: Filter & Metrics Surface (Single surface, no cards inside cards) -->
     <section class="controls-surface">
-      <div class="filter-group">
-        <!-- Status Segmented Control -->
-        <div class="filter-control">
-          <div class="segmented-control" id="statusFilterSegment">
-            <button class="segmented-btn active" data-status="all">All</button>
-            <button class="segmented-btn" data-status="active">Active</button>
-            <button class="segmented-btn" data-status="completed">Completed</button>
-          </div>
-        </div>
-
-        <!-- Type Selector -->
-        <div class="filter-control">
-          <span class="filter-label">Type:</span>
-          <select id="typeFilterSelect" class="select-input">
-            <option value="all">All Types</option>
-            <option value="Feature">Feature</option>
-            <option value="Bug">Bug</option>
-            <option value="Performance">Performance</option>
-            <option value="Refactor">Refactor</option>
-            <option value="Doc">Doc</option>
-          </select>
-        </div>
-
-        <!-- Priority Selector -->
-        <div class="filter-control">
-          <span class="filter-label">Priority:</span>
-          <select id="priorityFilterSelect" class="select-input">
-            <option value="all">All Priorities</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
-        </div>
-      </div>
-
       <!-- Metrics Display (Label and value 2-4px apart) -->
       <div class="metrics-summary">
         <div class="metric-item">
@@ -1011,6 +1191,43 @@
         <div class="metric-item">
           <span class="metric-value" id="metricCompletedTasks">0</span>
           <span class="metric-label">Done</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <!-- Status Segmented Control -->
+        <div class="filter-control">
+          <div class="segmented-control" id="statusFilterSegment">
+            <button class="segmented-btn active" data-status="all">All</button>
+            <button class="segmented-btn" data-status="active">Active</button>
+            <button class="segmented-btn" data-status="completed">Completed</button>
+          </div>
+        </div>
+
+        <div class="filter-dropdowns-row">
+          <!-- Type Selector -->
+          <div class="filter-control">
+            <span class="filter-label">Type:</span>
+            <select id="typeFilterSelect" class="select-input">
+              <option value="all">All Types</option>
+              <option value="Feature">Feature</option>
+              <option value="Bug">Bug</option>
+              <option value="Performance">Performance</option>
+              <option value="Refactor">Refactor</option>
+              <option value="Doc">Doc</option>
+            </select>
+          </div>
+
+          <!-- Priority Selector -->
+          <div class="filter-control">
+            <span class="filter-label">Priority:</span>
+            <select id="priorityFilterSelect" class="select-input">
+              <option value="all">All Priorities</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
         </div>
       </div>
     </section>
@@ -1046,6 +1263,7 @@
   <!-- Add / Edit Task Modal -->
   <div class="modal-overlay" id="taskModal">
     <div class="modal-card">
+      <div class="modal-handle"></div>
       <div class="modal-header">
         <span class="modal-title" id="taskModalTitle">Add New Task</span>
         <button class="modal-close-btn" onclick="closeModal('taskModal')">
@@ -1108,6 +1326,7 @@
   <!-- Manage Apps Modal -->
   <div class="modal-overlay" id="manageAppsModal">
     <div class="modal-card">
+      <div class="modal-handle"></div>
       <div class="modal-header">
         <span class="modal-title">Manage Tracked Apps</span>
         <button class="modal-close-btn" onclick="closeModal('manageAppsModal')">
@@ -1139,6 +1358,7 @@
   <!-- Changelog Modal -->
   <div class="modal-overlay" id="changelogModal">
     <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-handle"></div>
       <div class="modal-header">
         <span class="modal-title">Export Clean Changelog</span>
         <button class="modal-close-btn" onclick="closeModal('changelogModal')">
@@ -1172,6 +1392,7 @@
   <!-- Phone Sync Modal -->
   <div class="modal-overlay" id="phoneModal">
     <div class="modal-card">
+      <div class="modal-handle"></div>
       <div class="modal-header">
         <span class="modal-title">Connect Mobile Phone</span>
         <button class="modal-close-btn" onclick="closeModal('phoneModal')">
@@ -1203,6 +1424,7 @@
   <!-- Backup & Restore Modal -->
   <div class="modal-overlay" id="backupModal">
     <div class="modal-card">
+      <div class="modal-handle"></div>
       <div class="modal-header">
         <span class="modal-title">Data Backup & Restore</span>
         <button class="modal-close-btn" onclick="closeModal('backupModal')">
@@ -1230,6 +1452,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile Floating Action Button (FAB) for one-handed operation -->
+  <button class="mobile-fab" id="btnMobileAddTask" title="New Task" aria-label="Add new task">
+    <i data-lucide="plus"></i>
+  </button>
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
@@ -1790,13 +2017,16 @@
       });
     });
 
-    document.getElementById('btnAddTaskModal').onclick = () => {
+    const openNewTaskModal = () => {
       document.getElementById('taskForm').reset();
       document.getElementById('editTaskId').value = '';
       document.getElementById('taskModalTitle').textContent = 'Add New Task';
       populateAppSelect('taskAppSelect', state.selectedAppId !== 'all' ? state.selectedAppId : state.apps[0]?.id);
       openModal('taskModal');
     };
+    document.getElementById('btnAddTaskModal').onclick = openNewTaskModal;
+    const mobileFab = document.getElementById('btnMobileAddTask');
+    if (mobileFab) mobileFab.onclick = openNewTaskModal;
 
     function populateAppSelect(selectId, selectedId) {
       const select = document.getElementById(selectId);

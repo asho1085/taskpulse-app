@@ -1570,30 +1570,58 @@
             supabaseClient.from('tasks').select('*')
           ]);
 
-          if (!appsRes.error && !tasksRes.error && appsRes.data && tasksRes.data && (appsRes.data.length > 0 || tasksRes.data.length > 0)) {
-            // Map Supabase snake_case fields to app model
-            state.apps = appsRes.data.map(a => ({
-              id: a.id,
-              name: a.name,
-              description: a.description || '',
-              createdAt: a.created_at
-            }));
-
-            state.tasks = tasksRes.data.map(t => ({
-              id: t.id,
-              appId: t.app_id,
-              title: t.title,
-              type: t.type || 'Feature',
-              priority: t.priority || 'Medium',
-              version: t.version || null,
-              notes: t.notes || '',
-              completed: !!t.completed,
-              createdAt: t.created_at,
-              completedAt: t.completed_at
-            }));
-
+          if (appsRes.error || tasksRes.error) {
+            const err = appsRes.error || tasksRes.error;
+            console.error('Supabase Query Error:', err);
+            if (err.code === '42501') {
+              console.warn('Postgres 42501: Permissions grant needed in Supabase SQL editor.');
+            }
+          } else if (appsRes.data && tasksRes.data) {
             state.isCloudConnected = true;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
+            if (appsRes.data.length > 0 || tasksRes.data.length > 0) {
+              // Map Supabase snake_case fields to app model
+              state.apps = appsRes.data.map(a => ({
+                id: a.id,
+                name: a.name,
+                description: a.description || '',
+                createdAt: a.created_at
+              }));
+
+              state.tasks = tasksRes.data.map(t => ({
+                id: t.id,
+                appId: t.app_id,
+                title: t.title,
+                type: t.type || 'Feature',
+                priority: t.priority || 'Medium',
+                version: t.version || null,
+                notes: t.notes || '',
+                completed: !!t.completed,
+                createdAt: t.created_at,
+                completedAt: t.completed_at
+              }));
+
+              localStorage.setItem(STORAGE_KEY, JSON.stringify({ apps: state.apps, tasks: state.tasks }));
+            } else {
+              // Cloud tables exist but are empty -> sync local data up to Supabase
+              const local = localStorage.getItem(STORAGE_KEY);
+              if (local) {
+                try {
+                  const parsed = JSON.parse(local);
+                  if (parsed.apps && parsed.apps.length > 0) {
+                    state.apps = parsed.apps;
+                    state.tasks = parsed.tasks || [];
+                  } else {
+                    seedInitialData();
+                  }
+                } catch (e) {
+                  seedInitialData();
+                }
+              } else {
+                seedInitialData();
+              }
+              saveData();
+            }
+
             updateSyncIndicator(true);
             render();
             return;

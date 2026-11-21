@@ -1,18 +1,11 @@
 @echo off
 setlocal
-title TaskPulse Launcher
+title TaskPulse
 cd /d "%~dp0"
 
-:: Start node server directly in background if not already running
-tasklist /fi "imagename eq node.exe" | findstr /i "node.exe" >nul
-if %errorlevel% neq 0 (
-    start "" /b "C:\Program Files\nodejs\node.exe" server.js
-    timeout /t 1 /nobreak >nul
-)
+:: Launch pure cloud app in dedicated desktop window
+set "APP_URL=https://asho1085.github.io/taskpulse-app/"
 
-set "APP_URL=http://127.0.0.1:4321"
-
-:: Locate Microsoft Edge or Google Chrome to launch in dedicated desktop App Window mode
 set "EDGE_EXE=%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe"
 if not exist "%EDGE_EXE%" set "EDGE_EXE=%ProgramFiles%\Microsoft\Edge\Application\msedge.exe"
 

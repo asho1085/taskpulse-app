@@ -1,0 +1,13 @@
+{
+  "name": "taskpulse-laptop",
+  "version": "1.0.0",
+  "description": "Ultra-lightweight laptop task & change manager by app name",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "launch": "cmd /c Launch-App.bat"
+  },
+  "keywords": ["task-tracker", "laptop-app", "changelog", "app-changes", "minimal-size"],
+  "author": "",
+  "license": "MIT"
+}

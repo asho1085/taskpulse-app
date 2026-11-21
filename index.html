@@ -23,7 +23,7 @@
        7. Transitions on user action only: 150-250ms ease-out. No looping animations.
        ========================================================================== */
     :root {
-      /* 60% Background */
+      /* 60% Light Background */
       --bg-base: #f4f5f8;
       
       /* 30% Surface & Structure */
@@ -59,6 +59,8 @@
       --status-danger-bg: #fef2f2;
       --status-danger-border: #fecaca;
 
+      --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
       /* Spacing Rules */
       --space-2: 2px;
       --space-4: 4px;
@@ -79,6 +81,46 @@
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
+    [data-theme="dark"] {
+      /* 60% Dark Canvas Background */
+      --bg-base: #0b0f19;
+      
+      /* 30% Dark Surface & Structure */
+      --surface-white: #161e2e;
+      --surface-subtle: #1c2638;
+      --surface-hover: #243147;
+      --border-subtle: #293548;
+      --border-strong: #3b4b66;
+      
+      /* High Contrast Text Scale */
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-dim: #94a3b8;
+      --text-disabled: #64748b;
+      
+      /* 10% Royal / Navy Accent (Crisp contrast against dark background) */
+      --accent-navy: #1d4ed8;
+      --accent-royal: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-tint: rgba(59, 130, 246, 0.15);
+      --accent-border: rgba(59, 130, 246, 0.35);
+      
+      /* Functional Status Colors in Dark Mode */
+      --status-success: #4ade80;
+      --status-success-bg: rgba(34, 197, 94, 0.12);
+      --status-success-border: rgba(34, 197, 94, 0.28);
+      
+      --status-warning: #fbbf24;
+      --status-warning-bg: rgba(245, 158, 11, 0.12);
+      --status-warning-border: rgba(245, 158, 11, 0.28);
+      
+      --status-danger: #f87171;
+      --status-danger-bg: rgba(239, 68, 68, 0.12);
+      --status-danger-border: rgba(239, 68, 68, 0.28);
+
+      --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -95,6 +137,7 @@
       flex-direction: column;
       font-size: 14px;
       line-height: 1.5;
+      transition: background-color 180ms ease-out, color 180ms ease-out;
     }
 
     /* --------------------------------------------------------------------------
@@ -407,7 +450,7 @@
       cursor: pointer;
       outline: none;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-image: var(--select-arrow);
       background-repeat: no-repeat;
       background-position: right 8px center;
       transition: border-color 180ms ease-out;
@@ -1137,6 +1180,10 @@
           <span id="syncStatusText">Supabase Synced</span>
         </div>
 
+        <button class="btn btn-secondary btn-icon" id="btnThemeToggle" title="Toggle Theme (Light / Dark)" aria-label="Toggle Theme">
+          <i data-lucide="moon" id="themeToggleIcon"></i>
+        </button>
+
         <button class="btn btn-secondary" id="btnOpenPhone" title="Sync with mobile phone">
           <i data-lucide="smartphone"></i>
           <span class="btn-label">Phone</span>
@@ -1500,6 +1547,46 @@
           }
         });
       }
+    }
+
+    // --- Theme Engine (Light / Dark) ---
+    function initTheme() {
+      const savedTheme = localStorage.getItem('taskpulse_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+      applyTheme(theme, false);
+
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          if (!localStorage.getItem('taskpulse_theme')) {
+            applyTheme(e.matches ? 'dark' : 'light', false);
+          }
+        });
+      }
+    }
+
+    function applyTheme(theme, persist = true) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (persist) {
+        localStorage.setItem('taskpulse_theme', theme);
+      }
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) {
+        icon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+        refreshIcons();
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next, true);
+      showToast(next === 'dark' ? 'Dark mode enabled' : 'Light mode enabled', next === 'dark' ? 'moon' : 'sun');
+    }
+
+    const themeToggleBtn = document.getElementById('btnThemeToggle');
+    if (themeToggleBtn) {
+      themeToggleBtn.onclick = toggleTheme;
     }
 
     // --- Toast Notifications (Rule 7: 180ms ease-out) ---
@@ -2296,6 +2383,7 @@
     }
 
     // Initialize Application
+    initTheme();
     loadData();
   </script>
 </body>

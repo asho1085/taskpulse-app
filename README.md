@@ -6,7 +6,18 @@ An ultra-lightweight, high-speed task adder, completer, and changelog tracker bu
 
 ---
 
-## 🚀 How to Run
+## 🌐 Live Cloud Deployments
+
+| Provider | Status / 1-Click Deploy |
+| :--- | :--- |
+| **GitHub Pages** | [asho1085.github.io/taskpulse-app](https://asho1085.github.io/taskpulse-app/) |
+| **Render (Node.js)** | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/asho1085/taskpulse-app) |
+| **Railway (Node.js)** | [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/asho1085/taskpulse-app) |
+| **Vercel** | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/asho1085/taskpulse-app) |
+
+---
+
+## 🚀 How to Run Locally
 
 You have three simple ways to run the app:
 

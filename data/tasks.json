@@ -1,173 +1,47 @@
 {
   "apps": [
     {
-      "id": "app-1",
-      "name": "TaskLaptop",
-      "description": "Personal laptop task & change manager",
-      "createdAt": "2026-11-20T10:00:00.000Z"
-    },
-    {
-      "id": "app-2",
-      "name": "MobileStoreApp",
-      "description": "E-commerce mobile app for Android & iOS",
-      "createdAt": "2026-11-18T14:30:00.000Z"
-    },
-    {
-      "id": "app-3",
-      "name": "InventoryPortal",
-      "description": "Warehouse stock tracking and reporting web app",
-      "createdAt": "2026-11-15T09:15:00.000Z"
-    },
-    {
-      "id": "app-1795277168262",
-      "name": "Video Editor",
+      "id": "app-1795277810370",
+      "name": "python editor",
       "description": "",
-      "createdAt": "2026-11-21T16:06:08.262Z"
-    },
-    {
-      "id": "app-1795277240942",
-      "name": "bn",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:20.942Z"
-    },
-    {
-      "id": "app-1795277246036",
-      "name": "gh",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:26.036Z"
-    },
-    {
-      "id": "app-1795277246898",
-      "name": "h",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:26.898Z"
-    },
-    {
-      "id": "app-1795277252607",
-      "name": "d",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:32.607Z"
-    },
-    {
-      "id": "app-1795277254219",
-      "name": "dg",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:34.219Z"
-    },
-    {
-      "id": "app-1795277255164",
-      "name": "ss",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:35.164Z"
-    },
-    {
-      "id": "app-1795277256449",
-      "name": "ety",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:36.449Z"
-    },
-    {
-      "id": "app-1795277257463",
-      "name": "etet",
-      "description": "",
-      "createdAt": "2026-11-21T16:07:37.463Z"
+      "createdAt": "2026-11-21T16:16:50.370Z"
     }
   ],
   "tasks": [
     {
-      "id": "task-1795277190985",
-      "appId": "app-1795277168262",
-      "title": "color change",
+      "id": "task-1795277911578",
+      "appId": "app-1795277810370",
+      "title": "make the design responsive",
       "type": "Performance",
       "priority": "High",
       "version": null,
       "notes": "",
       "completed": false,
-      "createdAt": "2026-11-21T16:06:30.985Z",
+      "createdAt": "2026-11-21T16:18:31.578Z",
       "completedAt": null
     },
     {
-      "id": "task-101",
-      "appId": "app-1",
-      "title": "Add keyboard shortcuts (Ctrl+N for new change, Ctrl+F for search)",
-      "type": "Feature",
-      "priority": "High",
-      "version": "v1.0.0",
-      "notes": "Improve efficiency when working quickly on laptop",
-      "completed": true,
-      "createdAt": "2026-11-20T10:15:00.000Z",
-      "completedAt": "2026-11-21T08:30:00.000Z"
-    },
-    {
-      "id": "task-102",
-      "appId": "app-1",
-      "title": "Build automatic CHANGELOG.md generator from completed changes",
-      "type": "Feature",
-      "priority": "Medium",
-      "version": "v1.1.0",
-      "notes": "Group completed changes by type and copy to release notes",
-      "completed": true,
-      "createdAt": "2026-11-20T11:00:00.000Z",
-      "completedAt": "2026-11-21T09:10:00.000Z"
-    },
-    {
-      "id": "task-103",
-      "appId": "app-1",
-      "title": "Add one-click complete toggle with visual celebration effect",
-      "type": "UI / UX",
-      "priority": "Low",
-      "version": "v1.1.0",
-      "notes": "Make task completion satisfying",
-      "completed": false,
-      "createdAt": "2026-11-20T12:00:00.000Z",
-      "completedAt": null
-    },
-    {
-      "id": "task-104",
-      "appId": "app-2",
-      "title": "Implement biometric fingerprint login on checkout screen",
-      "type": "Feature",
-      "priority": "Urgent",
-      "version": "v2.4.0",
-      "notes": "Requested by users for faster one-tap checkout",
-      "completed": false,
-      "createdAt": "2026-11-19T09:00:00.000Z",
-      "completedAt": null
-    },
-    {
-      "id": "task-105",
-      "appId": "app-2",
-      "title": "Fix cart item counter glitch when removing items quickly",
-      "type": "Bug Fix",
-      "priority": "High",
-      "version": "v2.3.2",
-      "notes": "Badge count does not decrement if tapped twice in 300ms",
-      "completed": true,
-      "createdAt": "2026-11-18T16:00:00.000Z",
-      "completedAt": "2026-11-19T14:45:00.000Z"
-    },
-    {
-      "id": "task-106",
-      "appId": "app-3",
-      "title": "Add export weekly inventory report to Excel and CSV",
-      "type": "Feature",
-      "priority": "Medium",
-      "version": "v1.5.0",
-      "notes": "Support automated scheduled email dispatch as well",
-      "completed": false,
-      "createdAt": "2026-11-16T11:20:00.000Z",
-      "completedAt": null
-    },
-    {
-      "id": "task-107",
-      "appId": "app-3",
-      "title": "Optimize SQL query for stock status filter on 50,000+ items",
+      "id": "task-1795277889871",
+      "appId": "app-1795277810370",
+      "title": "selecting text and selecting all texts is not working fix it",
       "type": "Performance",
       "priority": "High",
-      "version": "v1.5.0",
-      "notes": "Add database index on category_id and stock_count",
+      "version": null,
+      "notes": "",
       "completed": false,
-      "createdAt": "2026-11-17T13:10:00.000Z",
+      "createdAt": "2026-11-21T16:18:09.871Z",
+      "completedAt": null
+    },
+    {
+      "id": "task-1795277842658",
+      "appId": "app-1795277810370",
+      "title": "Enter button is no working fix it",
+      "type": "Performance",
+      "priority": "High",
+      "version": null,
+      "notes": "",
+      "completed": false,
+      "createdAt": "2026-11-21T16:17:22.658Z",
       "completedAt": null
     }
   ]
